@@ -27,16 +27,13 @@ export default function ViewLayer(){
         if(!canvas) return
         const ctx = canvas.getContext('2d')
         if(!ctx) return
-        getRecords((res:{
-            documents: [
-                {
-                    x:number,
-                    y:number,
-                    color:Color
-                }
-            ]
-        })=>{
-            res.documents.forEach((doc)=>{
+        getRecords((res:Array<{
+            x:number,
+            y:number,
+            color:Color
+        }>)=>{
+            console.log(res)
+            res.forEach((doc)=>{
                 fillPixel(doc.x,doc.y,doc.color)
             }
             )

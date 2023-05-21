@@ -2,7 +2,7 @@
 import {Client,Account,Databases} from 'appwrite'
 import {createContext,Dispatch,SetStateAction} from 'react'
 //@ts-expect-error
-import { ID } from 'appwrite'
+import { ID,Query } from 'appwrite'
 export const client = new Client()
 .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
 .setProject('6468e7942705cfd6a1f9') // Your project ID
@@ -35,16 +35,55 @@ export function addRecord(x:number,y:number,color:Color,Callback?:Function){
 
 
 export function getRecords(Callback?:Function){
-    databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43').then((response:any) => {
-        console.log(response);
-        if(Callback){
-            Callback(response)
-        }
+    let buffer = [] as any;
+    databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
+        Query.limit(100)
+    ]).then((response:any) => {
+        buffer = [
+            ...buffer,
+            ...response.documents
+        ]
+        databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
+            Query.limit(100),
+            Query.offset(100)
+        ]).then((response:any) => {
+            buffer = [
+                ...buffer,
+                ...response.documents
+            ]
+            databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
+                Query.limit(100),
+                Query.offset(200)
+            ]).then((response:any) => {
+                buffer = [
+                    ...buffer,
+                    ...response.documents
+                ]
+                databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
+                    Query.limit(100),
+                    Query.offset(300)
+                ]).then((response:any) => {
+                    buffer = [
+                        ...buffer,
+                        ...response.documents
+                    ]
+                }).then(()=>{
+                    if(Callback){
+                        Callback(buffer)
+                    }
+                }
+                ).catch((error:any) => {
+                    console.log(error);
+                }
+                );
+            })
+        })
     }
     ).catch((error:any) => {
         console.log(error);
     }
     );
+    
 }
 
 export const DatabaseContext = createContext(database);
