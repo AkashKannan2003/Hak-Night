@@ -69,7 +69,7 @@ export default function ViewLayer(){
         className="w-screen h-screen grid place-content-center"
         style={{imageRendering: "pixelated"}}
         autoCenter={true}
-        autoCenterZoomLevel={1}
+        autoCenterZoomLevel={0.8}
         realPinch={true}
         onStateChange={(state:{
             x:number,
@@ -80,7 +80,7 @@ export default function ViewLayer(){
             setPanState(state)
         }}
         >
-            <canvas className='w-full h-full translate-x-1/3 outline' ref={canvasRef} onClick={
+            <canvas className='w-full h-full -translate-x-1/2 -translate-y-1/2 outline' ref={canvasRef} onClick={
                 (e)=>{
                     getCursorPosition(canvasRef.current!,e instanceof MouseEvent ? e : e.nativeEvent)
                 }
