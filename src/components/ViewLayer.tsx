@@ -1,7 +1,7 @@
 //@ts-expect-error
 import { PanZoom } from 'react-easy-panzoom'
 import { useEffect,useRef,useState,useContext } from 'react'
-import { AccountContext } from '@/lib/appwriteContext'
+import { AccountContext,addRecord,Color,getRecords} from '@/lib/appwriteContext'
 export default function ViewLayer(){
     const account = useContext(AccountContext)
     const canvasRef =   useRef<HTMLCanvasElement>(null)
@@ -18,6 +18,21 @@ export default function ViewLayer(){
         if(!ctx) return
         ctx.strokeStyle = 'black'
         ctx.strokeRect(0,0,canvas.width,canvas.height)
+
+        getRecords((res:{
+            documents: [
+                {
+                    x:number,
+                    y:number,
+                    color:Color
+                }
+            ]
+        })=>{
+            res.documents.forEach((doc)=>{
+                fillPixel(doc.x,doc.y)
+            }
+            )
+        })
     },[])
     function fillPixel(x:number,y:number){
         const canvas = canvasRef.current
@@ -34,11 +49,10 @@ export default function ViewLayer(){
         const y = Math.floor((event.clientY - rect.top) / panState.scale)
         console.log("x: " + x + " y: " + y)
         account.get().then((res:any)=>{
-            fillPixel(x,y)
-        }).catch((err:any)=>{
-            
-        }
-        )
+            addRecord(x,y,Color.black,()=>{
+                fillPixel(x,y)
+            })
+        })
     }
     
     return (
@@ -46,7 +60,7 @@ export default function ViewLayer(){
         className="w-screen h-screen grid place-content-center"
         style={{imageRendering: "pixelated"}}
         autoCenter={true}
-        autoCenterZoomLevel={8}
+        autoCenterZoomLevel={1}
         onStateChange={(state:{
             x:number,
             y:number,

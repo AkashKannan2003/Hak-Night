@@ -1,6 +1,8 @@
 //@ts-expect-error
-import {Client,Account} from 'appwrite'
+import {Client,Account,Databases} from 'appwrite'
 import {createContext,Dispatch,SetStateAction} from 'react'
+//@ts-expect-error
+import { ID } from 'appwrite'
 export const client = new Client()
 .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
 .setProject('6468e7942705cfd6a1f9') // Your project ID
@@ -9,6 +11,47 @@ export const account = new Account(client)
 
 export const AppwriteContext = createContext(client)
 export const AccountContext = createContext(account)
+const databases = new Databases(client);
+
+export const database = databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43');
+
+export function addRecord(x:number,y:number,color:Color,Callback?:Function){
+    databases.createDocument('6469c715420054054da9', '6469f603252eeb749a43',ID.unique(), {
+        x:x,
+        y:y,
+        color:color
+    }
+    ).then((response:any) => {
+        console.log(response);
+        if(Callback){
+            Callback()
+        }
+    }
+    ).catch((error:any) => {
+        console.log(error);
+    }
+    );
+}
+
+
+export function getRecords(Callback?:Function){
+    databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43').then((response:any) => {
+        console.log(response);
+        if(Callback){
+            Callback(response)
+        }
+    }
+    ).catch((error:any) => {
+        console.log(error);
+    }
+    );
+}
+
+export const DatabaseContext = createContext(database);
+client.subscribe(['databases.6469c715420054054da9.collections.6469f603252eeb749a43.documents'], (response:any) => {
+    // Callback will be executed on changes for documents A and all files.
+    console.log(response.payload.x,response.payload.y,response.payload.color);
+});
 
 export const enum Color {
     red,
