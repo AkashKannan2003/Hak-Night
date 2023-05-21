@@ -1,12 +1,14 @@
 //@ts-expect-error
 import { PanZoom } from 'react-easy-panzoom'
 import { useEffect,useRef,useState,useContext } from 'react'
-import { AccountContext,addRecord,Color,getRecords,colorMap,stateContext} from '@/lib/appwriteContext'
+import { AccountContext,addRecord,Color,getRecords,colorMap,stateContext,AppwriteContext} from '@/lib/appwriteContext'
 export default function ViewLayer(){
     const account = useContext(AccountContext)
     const states = useContext(stateContext)
+    const client = useContext(AppwriteContext)
+
     const {
-        colorState: [colorState, setColorState],
+        colorState: [colorState, _],
     } = states;
     const canvasRef =   useRef<HTMLCanvasElement>(null)
     const [panState,setPanState] = useState({
@@ -16,6 +18,11 @@ export default function ViewLayer(){
         angle:0,
     })
     useEffect(()=>{
+        const unsubscribe = client.subscribe(['databases.6469c715420054054da9.collections.6469f603252eeb749a43.documents'], (response:any) => {
+            // Callback will be executed on changes for documents A and all files.
+            fillPixel(response.payload.x,response.payload.y,response.payload.color)
+        });
+        
         const canvas = canvasRef.current
         if(!canvas) return
         const ctx = canvas.getContext('2d')
@@ -34,6 +41,10 @@ export default function ViewLayer(){
             }
             )
         })
+
+        return ()=>{
+            unsubscribe()
+        }
     },[])
     function fillPixel(x:number,y:number,color:Color=Color.black){
         const canvas = canvasRef.current

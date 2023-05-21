@@ -48,10 +48,7 @@ export function getRecords(Callback?:Function){
 }
 
 export const DatabaseContext = createContext(database);
-client.subscribe(['databases.6469c715420054054da9.collections.6469f603252eeb749a43.documents'], (response:any) => {
-    // Callback will be executed on changes for documents A and all files.
-    console.log(response.payload.x,response.payload.y,response.payload.color);
-});
+
 
 export const enum Color {
     red,
