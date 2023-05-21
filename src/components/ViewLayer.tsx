@@ -60,7 +60,7 @@ export default function ViewLayer(){
         const x = Math.floor((event.clientX - rect.left) / panState.scale)
         const y = Math.floor((event.clientY - rect.top) / panState.scale)
         console.log("x: " + x + " y: " + y)
-        account.get().then((res:any)=>{
+        account.get().then(()=>{
             addRecord(x,y,colorState,()=>{
                 fillPixel(x,y,colorState)
             })

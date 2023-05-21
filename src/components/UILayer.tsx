@@ -1,21 +1,18 @@
 import { Button } from "./ui/button";
 import { useContext, useEffect, useState } from "react";
-import { AccountContext,stateContext } from "@/lib/appwriteContext";
+import { AccountContext } from "@/lib/appwriteContext";
 import ColorBox from "./ColorBox";
 export default function UILayer() {
   const account = useContext(AccountContext);
-  const {
-    colorState: [colorState, setColorState],
-  } = useContext(stateContext);
 
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     account
       .get()
-      .then((res:any) => {
+      .then(() => {
         setLoggedIn(true);
       })
-      .catch((err:any) => {
+      .catch(() => {
         setLoggedIn(false);
       });
   }, []);
