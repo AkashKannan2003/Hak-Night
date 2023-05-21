@@ -13,6 +13,7 @@
     "@panzoom/panzoom": "^4.5.1",
     "@radix-ui/react-navigation-menu": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.1",
+    "appwrite": "^11.0.0",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "lucide-react": "^0.220.0",
