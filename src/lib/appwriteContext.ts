@@ -13,8 +13,6 @@ export const AppwriteContext = createContext(client)
 export const AccountContext = createContext(account)
 const databases = new Databases(client);
 
-export const database = databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43');
-
 export function addRecord(x:number,y:number,color:Color,Callback?:Function){
     databases.createDocument('6469c715420054054da9', '6469f603252eeb749a43',ID.unique(), {
         x:x,
@@ -32,61 +30,39 @@ export function addRecord(x:number,y:number,color:Color,Callback?:Function){
     }
     );
 }
+//databaseId: 6469c715420054054da9
+//collectionId: 6469f603252eeb749a43
+
+export function getAllPages(collectionId:string,Callback?:Function){
+    let records:any[] = []
+    let page = 0
+
+    function getRecords(){
+        databases.listDocuments('6469c715420054054da9', collectionId, [
+            Query.limit(100),
+            Query.offset(page*100)
+        ]).then((response:any) => {
+            records = records.concat(response.documents)
+            if(response.total > (page+1)*100){
+                page++
+                getRecords()
+            }else{
+                if(Callback){
+                    Callback(records)
+                }
+            }
+        }).catch((error:any) => {
+            console.log(error);
+        });
+    }
+    getRecords()
+}
+
 
 
 export function getRecords(Callback?:Function){
-    let buffer = [] as any;
-    databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
-        Query.limit(100)
-    ]).then((response:any) => {
-        buffer = [
-            ...buffer,
-            ...response.documents
-        ]
-        databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
-            Query.limit(100),
-            Query.offset(100)
-        ]).then((response:any) => {
-            buffer = [
-                ...buffer,
-                ...response.documents
-            ]
-            databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
-                Query.limit(100),
-                Query.offset(200)
-            ]).then((response:any) => {
-                buffer = [
-                    ...buffer,
-                    ...response.documents
-                ]
-                databases.listDocuments('6469c715420054054da9', '6469f603252eeb749a43',[
-                    Query.limit(100),
-                    Query.offset(300)
-                ]).then((response:any) => {
-                    buffer = [
-                        ...buffer,
-                        ...response.documents
-                    ]
-                }).then(()=>{
-                    if(Callback){
-                        Callback(buffer)
-                    }
-                }
-                ).catch((error:any) => {
-                    console.log(error);
-                }
-                );
-            })
-        })
-    }
-    ).catch((error:any) => {
-        console.log(error);
-    }
-    );
-    
+    getAllPages("6469f603252eeb749a43",Callback)
 }
-
-export const DatabaseContext = createContext(database);
 
 
 export const enum Color {

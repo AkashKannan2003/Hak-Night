@@ -70,6 +70,7 @@ export default function ViewLayer(){
         style={{imageRendering: "pixelated"}}
         autoCenter={true}
         autoCenterZoomLevel={1}
+        realPinch={true}
         onStateChange={(state:{
             x:number,
             y:number,
