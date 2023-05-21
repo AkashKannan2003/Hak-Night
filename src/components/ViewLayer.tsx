@@ -20,9 +20,6 @@ export default function ViewLayer(){
         if(!canvas) return
         const ctx = canvas.getContext('2d')
         if(!ctx) return
-        ctx.strokeStyle = 'black'
-        ctx.strokeRect(0,0,canvas.width,canvas.height)
-
         getRecords((res:{
             documents: [
                 {
@@ -74,7 +71,7 @@ export default function ViewLayer(){
             setPanState(state)
         }}
         >
-            <canvas className='w-full h-full translate-x-1/3' ref={canvasRef} onClick={
+            <canvas className='w-full h-full translate-x-1/3 outline' ref={canvasRef} onClick={
                 (e)=>{
                     getCursorPosition(canvasRef.current!,e instanceof MouseEvent ? e : e.nativeEvent)
                 }
