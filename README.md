@@ -15,7 +15,7 @@ This is heavily inspired by the famous r/place experiment by Reddit.
 
 ## Link to product walkthrough
 
-[link to video]
+[link to demo video](https://youtu.be/FLFibiizbjQ)
 
 ## How it Works ?
 
