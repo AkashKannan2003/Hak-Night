@@ -1,9 +1,13 @@
 //@ts-expect-error
 import { PanZoom } from 'react-easy-panzoom'
 import { useEffect,useRef,useState,useContext } from 'react'
-import { AccountContext,addRecord,Color,getRecords} from '@/lib/appwriteContext'
+import { AccountContext,addRecord,Color,getRecords,colorMap,stateContext} from '@/lib/appwriteContext'
 export default function ViewLayer(){
     const account = useContext(AccountContext)
+    const states = useContext(stateContext)
+    const {
+        colorState: [colorState, setColorState],
+    } = states;
     const canvasRef =   useRef<HTMLCanvasElement>(null)
     const [panState,setPanState] = useState({
         x:0,
@@ -29,17 +33,17 @@ export default function ViewLayer(){
             ]
         })=>{
             res.documents.forEach((doc)=>{
-                fillPixel(doc.x,doc.y)
+                fillPixel(doc.x,doc.y,doc.color)
             }
             )
         })
     },[])
-    function fillPixel(x:number,y:number){
+    function fillPixel(x:number,y:number,color:Color=Color.black){
         const canvas = canvasRef.current
         if(!canvas) return
         const ctx = canvas.getContext('2d')
         if(!ctx) return
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = colorMap[color]
         ctx.fillRect(x,y,1,1)   
     }
 
@@ -49,8 +53,8 @@ export default function ViewLayer(){
         const y = Math.floor((event.clientY - rect.top) / panState.scale)
         console.log("x: " + x + " y: " + y)
         account.get().then((res:any)=>{
-            addRecord(x,y,Color.black,()=>{
-                fillPixel(x,y)
+            addRecord(x,y,colorState,()=>{
+                fillPixel(x,y,colorState)
             })
         })
     }

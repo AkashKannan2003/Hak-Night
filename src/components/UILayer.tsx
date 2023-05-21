@@ -23,7 +23,6 @@ export default function UILayer() {
     <div className="">
       {loggedIn ? (
         <Button
-          variant="outline"
           className="absolute bottom-10 right-1/2"
           onClick={() => {
             account.deleteSession("current");
@@ -35,7 +34,6 @@ export default function UILayer() {
       ) : (
         <>
         <Button
-          variant="outline"
           className="absolute bottom-10 right-1/2"
           onClick={() => {
             account.createOAuth2Session(

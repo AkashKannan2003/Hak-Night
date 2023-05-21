@@ -1,9 +1,9 @@
 import ViewLayer from '@/components/ViewLayer'
 import UILayer from './components/UILayer'
-import { AppwriteContext,AccountContext,client,account,stateContext } from './lib/appwriteContext'
+import { AppwriteContext,AccountContext,client,account,stateContext,Color } from './lib/appwriteContext'
 import { useState } from 'react'
 function App() {
-  const [colorState,setColorState] = useState(0);
+  const [colorState,setColorState] = useState(Color.black);
   return (
       <AppwriteContext.Provider value={client}>
       <AccountContext.Provider value={account}>

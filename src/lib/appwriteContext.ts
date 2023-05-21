@@ -88,5 +88,5 @@ export const stateContext = createContext<{
         Dispatch<SetStateAction<Color>>
     ]
 }>({
-    colorState: [0, () => {}]
+    colorState: [Color.black, () => {}]
 })
